@@ -1,5 +1,6 @@
 if GetResourceState('es_extended'):find('start') then
 	ESX = true
+	local framework = nil
 
 	AddEventHandler('skinchanger:loadDefaultModel', function(male, cb)
 		client.setPlayerModel(male and `mp_m_freemode_01` or `mp_f_freemode_01`)
@@ -29,6 +30,30 @@ if GetResourceState('es_extended'):find('start') then
 			props = true,
 			tattoos = true
 		})
+	end)
+
+	AddEventHandler('esx_skin:playerRegistered', function()
+		framework = exports['es_extended']:getSharedObject()
+		framework = { TriggerServerCallback = framework.TriggerServerCallback }
+		framework.TriggerServerCallback('esx_skin:getPlayerSkin', function(skin, jobSkin)
+			if not skin or skin == nil or skin == {} then
+				client.startPlayerCustomization(function (appearance)
+					if (appearance) then
+						TriggerServerEvent('esx_skin:save', appearance)
+					end				
+				end, {
+					ped = true,
+					headBlend = true,
+					faceFeatures = true,
+					headOverlays = true,
+					components = true,
+					props = true,
+					tattoos = true
+				})
+			else
+				TriggerEvent('skinchanger:loadSkin', skin)
+			end
+		end)
 	end)
 end
 
