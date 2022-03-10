@@ -1,6 +1,7 @@
 if GetResourceState('es_extended'):find('start') then
 	ESX = true
 	local framework = nil
+	local isPlayerVisibleToOthers = true
 
 	AddEventHandler('skinchanger:loadDefaultModel', function(male, cb)
 		client.setPlayerModel(male and `mp_m_freemode_01` or `mp_f_freemode_01`)
@@ -37,10 +38,12 @@ if GetResourceState('es_extended'):find('start') then
 		framework = { TriggerServerCallback = framework.TriggerServerCallback }
 		framework.TriggerServerCallback('esx_skin:getPlayerSkin', function(skin, jobSkin)
 			if not skin or skin == nil or skin == {} then
+				setLocalPlayerOnlyVisibleLocally()
 				client.startPlayerCustomization(function (appearance)
 					if (appearance) then
 						TriggerServerEvent('esx_skin:save', appearance)
-					end				
+					end
+					isPlayerVisibleToOthers = true		
 				end, {
 					ped = true,
 					headBlend = true,
@@ -55,6 +58,19 @@ if GetResourceState('es_extended'):find('start') then
 			end
 		end)
 	end)
+
+	function setLocalPlayerOnlyVisibleLocally()
+		CreateThread(function()
+			isPlayerVisibleToOthers = false
+			SetEntityVisible(PlayerPedId(), false, 0)
+			while not isPlayerVisibleToOthers do 
+				SetLocalPlayerVisibleLocally(true)
+				Wait(0)
+			end
+			SetLocalPlayerVisibleLocally(false)
+			SetEntityVisible(PlayerPedId(), true, 0)
+		end)
+	end
 end
 
 local shops = {
