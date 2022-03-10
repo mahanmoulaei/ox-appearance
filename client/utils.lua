@@ -317,7 +317,7 @@ local function setPedAppearance(ped, appearance)
 		if appearance.faceFeatures then setPedFaceFeatures(ped, appearance.faceFeatures) end
 		if appearance.headOverlays then setPedHeadOverlays(ped, appearance.headOverlays) end
 		if appearance.eyeColor then setPedEyeColor(ped, appearance.eyeColor) end
-		if appearance.hair and appearance.tattoos then setPedHairAndDecorations(ped, appearance.hair, appearance.tattoos) end
+		if appearance.hair or appearance.tattoos then setPedHairAndDecorations(ped, appearance.hair, appearance.tattoos) end
 		currentTattoosJSON = appearance.tattoos
 	end
 end
