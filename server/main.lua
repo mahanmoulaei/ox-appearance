@@ -56,7 +56,7 @@ if GetResourceState('es_extended'):find('start') then
 		local xPlayer = ESX.GetPlayerFromId(source)
 		local appearance = MySQL.scalar.await('SELECT skin FROM users WHERE identifier = ?', { xPlayer.identifier })
 
-		cb(appearance and json.decode(appearance) or {})
+		cb(appearance ~= nil and json.decode(appearance) or nil)
 	end)
 
 	do
